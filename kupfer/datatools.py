@@ -11,30 +11,31 @@ class SavedIterable (object):
 	thin wrapper of a sequence iterator. The SavedIterable will pickle
 	into a list.
 
-	>>> s = SavedIterable(xrange(5))
-	>>> iter(s).next()
+	>>> r = list(range(5))
+	>>> s = SavedIterable(iter(r))
+	>>> next(iter(s))
 	0
 	>>> list(s)
 	[0, 1, 2, 3, 4]
 
-	>>> iter(s)   # doctest: +ELLIPSIS
-	<listiterator object at 0x...>
+	>>> type(iter(s)) is type(iter([]))
+	True
 
 	>>> import pickle
 	>>> pickle.loads(pickle.dumps(s))
 	[0, 1, 2, 3, 4]
 
-	>>> u = SavedIterable(xrange(5))
+	>>> u = SavedIterable(iter(r))
 	>>> one, two = iter(u), iter(u)
-	>>> one.next(), two.next()
+	>>> next(one), next(two)
 	(0, 0)
 	>>> list(two)
 	[1, 2, 3, 4]
 	>>> list(one)
 	[1, 2, 3, 4]
 
-	>>> SavedIterable(range(3))
-	[0, 1, 2]
+	>>> SavedIterable(r)
+	[0, 1, 2, 3, 4]
 	"""
 	def __new__(cls, iterable):
 		if isinstance(iterable, list):
@@ -50,7 +51,7 @@ class SavedIterable (object):
 	def _incremental_caching_iter(self):
 		indices = itertools.count()
 		while True:
-			idx = indices.next()
+			idx = next(indices)
 			try:
 				yield self.data[idx]
 			except IndexError:
@@ -60,7 +61,7 @@ class SavedIterable (object):
 			if self.iterator is None:
 				return
 			try:
-				x = self.iterator.next()
+				x = next(self.iterator)
 				self.data.append(x)
 				yield x
 			except StopIteration:
