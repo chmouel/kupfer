@@ -46,8 +46,7 @@ def get_rhythmbox_songs(dbfile, typ="song", keys=NEEDED_KEYS):
 def sort_album(album):
 	"""Sort album in track order"""
 	def get_track_number(rec):
-		tnr = rec.get("track-number")
-		if not tnr: return None
+		tnr = rec.get("track-number", 0)
 		try:
 			tnr = int(tnr)
 		except ValueError:
@@ -68,8 +67,7 @@ def sort_album_order(songs):
 	['b', 'c', 'a']
 	"""
 	def get_album_order(rec):
-		tnr = rec.get("track-number")
-		if not tnr: return None
+		tnr = rec.get("track-number", 0)
 		try:
 			tnr = int(tnr)
 		except ValueError:
