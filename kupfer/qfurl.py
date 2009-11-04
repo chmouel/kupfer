@@ -1,8 +1,10 @@
-import urlparse
-from urlparse import urlparse as _urlparse
-from urlparse import urlunparse as _urlunparse
+try:
+	import urlparse
+except ImportError:
+	import urllib.parse as urlparse
 
-from kupfer import pretty
+_urlparse = urlparse.urlparse
+_urlunparse = urlparse.urlunparse
 
 QFURL_SCHEME = "qpfer"
 
@@ -51,7 +53,7 @@ class qfurl (object):
 			typname = "%s.%s" % (type(obj).__module__, type(obj).__name__)
 			try:
 				qfid = obj.qf_id
-			except AttributeError, err:
+			except AttributeError:
 				raise QfurlError("%s has no qfurl" % obj)
 			self.url = _urlunparse((QFURL_SCHEME, "", qfid, "", "", typname))
 		else:
@@ -109,8 +111,8 @@ class qfurl (object):
 						matches.append(obj)
 				except QfurlError:
 					pass
-		pretty.print_debug(__name__, "Found matches:", matches)
-		pretty.print_debug(__name__, "For", self)
+		#pretty.print_debug(__name__, "Found matches:", matches)
+		#pretty.print_debug(__name__, "For", self)
 		return matches[0] if matches else None
 
 if __name__ == '__main__':
