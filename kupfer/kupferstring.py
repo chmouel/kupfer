@@ -56,14 +56,14 @@ def tofolded(ustr):
 	their base, and extended latin characters are replaced by
 	similar basic latin characters.
 
-	>>> tofolded(u"Wyłącz")
+	>>> tofolded(u'Wyłącz')
 	u'Wylacz'
-	>>> tofolded(u"naïveté")
+	>>> tofolded(u'naïveté')
 	u'naivete'
 
 	Characters from other scripts are not transliterated.
 
-	>>> print(tofolded(u"Ἑλλάς"))
+	>>> print(tofolded(u'Ἑλλάς'))
 	Ελλας
 	"""
 	srcstr = normalize("NFKD", ustr.translate(folding_table))
@@ -74,6 +74,9 @@ if __name__ == '__main__':
 	if not sys.getdefaultencoding() == "utf-8":
 		reload(sys)
 		sys.setdefaultencoding("UTF-8")
+	else:
+		# for Py 3 we make this absurd hack to update the docstring
+		tofolded.__doc__ = tofolded.__doc__.replace("u'", "'")
 
 	import doctest
 	doctest.testmod()
