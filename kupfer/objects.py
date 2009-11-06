@@ -949,10 +949,14 @@ class MultiSource (Source):
 		return True
 
 	def get_items(self):
+		import time
 		iterators = []
 		for so in self.sources:
-			it = so.get_leaves()
+			st = time.time()
+			it = aslist(so.get_leaves())
 			iterators.append(it)
+			name = "%s.%s" % (so.__class__.__module__, so.__class__.__name__)
+			print "TIME: %s at %.4f seconds" % (name, time.time()-st)
 
 		return itertools.chain(*iterators)
 
