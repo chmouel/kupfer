@@ -120,7 +120,7 @@ class ChangeStatus(Action):
 	def object_source(self, for_item=None):
 		return StatusSource()
 
-
+import time
 class ContactsSource(AppLeafContentMixin, Source):
 	''' Get contacts from all on-line accounts in Gajim via DBus '''
 	appleaf_content_id = 'gajim'
@@ -129,17 +129,23 @@ class ContactsSource(AppLeafContentMixin, Source):
 		Source.__init__(self, _('Gajim Contacts'))
 
 	def get_items(self):
+		st = time.time()
+		print "enter get_items", st
 		interface = _create_dbus_connection()
 		if interface is None:
 			return
+		print "connected", time.time() - st
+		num = 0
 		
 		for account in interface.list_accounts():
 			if interface.get_status(account) == 'offline':
 				continue
 
 			for contact in interface.list_contacts(account):
+				num += 1
 				yield GajimContact(contact['name'], contact['jid'], account, \
 						contact['show'], contact['resources'])
+		print "sent all", time.time() - st, "for %d contacts" % num
 
 	def is_dynamic(self):
 		return True
