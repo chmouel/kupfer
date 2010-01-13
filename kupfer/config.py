@@ -41,7 +41,7 @@ def get_data_file(filename, package=PACKAGE_NAME):
 	try:
 		from . import version_subst
 	except ImportError:
-		first_datadir = os.path.abspath("%s/../data" % (os.path.dirname(__file__))
+		first_datadir = os.path.abspath("%s/../data" % (os.path.dirname(__file__)))
 	else:
 		first_datadir = os.path.join(version_subst.DATADIR, package)
 
